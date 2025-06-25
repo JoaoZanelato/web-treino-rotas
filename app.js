@@ -37,6 +37,10 @@ app.use(session({
     }),
     resave: false,
     saveUninitialized: false,
+    cookie: {
+        secure: false, // true apenas em HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // 24 horas
+    }
 }));
 
 // Configuração do Passport (autenticação)
@@ -47,7 +51,7 @@ app.use(passport.session());
 // Middleware para passar dados do usuário para todas as views (ex: nome do usuário no header)
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.isAuthenticated();
-    res.locals.user = req.user;
+    res.locals.user = req.user || null;
     next();
 });
 
@@ -58,21 +62,43 @@ app.use('/notes', notesRouter);
 
 // Captura erro 404 (página não encontrada) e encaminha para o handler de erro
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
-// Handler de Erro (Onde a correção foi aplicada)
+// Handler de Erro (Versão corrigida e melhorada)
 app.use(function(err, req, res, next) {
-  // Define variáveis locais para a view de erro
-  res.locals.message = err.message;
-  // Em desenvolvimento, mostra o erro completo. Em produção, não.
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // Define variáveis locais para a view de erro
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    
+    // Define o status da resposta (ex: 404, 500)
+    res.status(err.status || 500);
+    
+    // Log do erro para debugging
+    console.error('Erro capturado:', {
+        status: err.status || 500,
+        message: err.message,
+        stack: err.stack,
+        url: req.url,
+        method: req.method
+    });
 
-  // Define o status da resposta (ex: 404, 500)
-  res.status(err.status || 500);
-
-  // Renderiza a página de erro, procurando o arquivo na pasta 'partials'
-  res.render('partials/error'); // <<--- CORREÇÃO APLICADA AQUI
+    // Renderiza a página de erro
+    try {
+        res.render('pages/error', {
+            title: 'Erro ' + (err.status || 500),
+            error: res.locals.error,
+            message: res.locals.message
+        });
+    } catch (renderError) {
+        // Fallback caso a renderização da página de erro falhe
+        console.error('Erro ao renderizar página de erro:', renderError);
+        res.send(`
+            <h1>Erro ${err.status || 500}</h1>
+            <p>${err.message}</p>
+            <a href="/">Voltar para a página inicial</a>
+        `);
+    }
 });
 
 module.exports = app;
