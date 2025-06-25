@@ -1,11 +1,17 @@
 <%- include('partials/header'); %>
 
-<div class="p-5 mb-4 bg-white rounded-3 text-center">
+<div class="p-5 mb-4 bg-white rounded-3 text-center shadow-lg">
     <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Seu Espaço Pessoal de Anotações</h1>
-        <p class="fs-4">Guarde suas ideias, organize seus pensamentos e nunca mais se esqueça de nada. Simples e eficiente.</p>
-        <a href="/register" class="btn btn-primary btn-lg">Comece Agora</a>
-        <a href="/login" class="btn btn-secondary btn-lg">Já tenho conta</a>
+        <h1 class="display-4 fw-bold">Seu Espaço Pessoal de Ideias</h1>
+        <p class="fs-4 col-md-8 mx-auto">Guarde seus pensamentos, organize suas tarefas e nunca mais se esqueça de nada. Simples, rápido e eficiente.</p>
+        <% if (!isAuthenticated) { %>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="/register" class="btn btn-primary btn-lg px-4 gap-3">Comece Agora, é Grátis!</a>
+                <a href="/login" class="btn btn-outline-secondary btn-lg px-4">Já tenho conta</a>
+            </div>
+        <% } else { %>
+            <a href="/dashboard" class="btn btn-success btn-lg px-4">Ir para minhas anotações</a>
+        <% } %>
     </div>
 </div>
 

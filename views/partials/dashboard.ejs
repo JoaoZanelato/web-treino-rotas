@@ -1,46 +1,37 @@
 <%- include('partials/header'); %>
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Olá, <%= user.pronoun || '' %> <%= user.name %>!</h1>
-    <a href="/notes/create" class="btn btn-success">Nova Anotação</a>
+<div class="dashboard-header mb-4">
+    <h1>Olá, <%= user.name %>!</h1>
+    <a href="/notes/create" class="btn btn-primary px-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2z"/></svg>
+        Nova Anotação
+    </a>
 </div>
 
-<input type="text" id="searchInput" placeholder="Buscar em suas anotações..." class="form-control mb-3">
-
 <% if (notes.length > 0) { %>
-<form action="/notes/batch-delete" method="POST">
-    <button type="submit" class="btn btn-danger mb-3">Excluir Selecionadas</button>
-    <div id="notes-list">
-        <% notes.forEach(note => { %>
-            <div class="card note-item mb-2">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 class="card-title">
-                            <input type="checkbox" name="noteIds" value="<%= note.id %>" class="form-check-input me-2">
-                            <a href="/notes/<%= note.id %>"><%= note.title %></a>
-                        </h5>
-                        <div>
-                            <a href="/notes/<%= note.id %>/edit" class="btn btn-sm btn-outline-primary">Editar</a>
-                            <a href="/notes/<%= note.id %>/download" class="btn btn-sm btn-outline-secondary">Baixar</a>
-                        </div>
+<div class="card p-3">
+    <form action="/notes/batch-delete" method="POST">
+        <button type="submit" class="btn btn-sm btn-danger mb-3">Excluir Selecionadas</button>
+        <div id="notes-list">
+            <% notes.forEach(note => { %>
+                <div class="note-item card mb-2">
+                    <div class="d-flex align-items-center">
+                        <input type="checkbox" name="noteIds" value="<%= note.id %>" class="form-check-input me-3">
+                        <a href="/notes/<%= note.id %>" class="note-title-link flex-grow-1"><%= note.title %></a>
+                    </div>
+                    <div class="note-actions">
+                        <a href="/notes/<%= note.id %>/edit" class="btn btn-sm btn-outline-secondary">Editar</a>
+                        <a href="/notes/<%= note.id %>/download" class="btn btn-sm btn-outline-info ms-1">Baixar</a>
                     </div>
                 </div>
-            </div>
-        <% }); %>
-    </div>
-</form>
+            <% }); %>
+        </div>
+    </form>
+</div>
 <% } else { %>
-    <p>Você ainda não tem nenhuma anotação. Que tal <a href="/notes/create">criar a primeira</a>?</p>
+    <div class="text-center card p-5">
+        <h4>Você ainda não tem nenhuma anotação.</h4>
+        <p>Que tal <a href="/notes/create">criar a primeira</a>?</p>
+    </div>
 <% } %>
-
-<script>
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        let filter = this.value.toLowerCase();
-        let items = document.querySelectorAll('.note-item');
-        items.forEach(function(item) {
-            let text = item.textContent.toLowerCase();
-            item.style.display = text.includes(filter) ? '' : 'none';
-        });
-    });
-</script>
 
 <%- include('partials/footer'); %>

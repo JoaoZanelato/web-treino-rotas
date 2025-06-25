@@ -1,22 +1,21 @@
 <%- include('partials/header'); %>
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <h1 class="card-title text-center"><%= title %></h1>
-                <form action="/login" method="POST">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Senha</label>
-                        <input type="password" name="password" id="password" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
-                </form>
-            </div>
+<div class="auth-container card">
+    <h1 class="text-center mb-4"><%= title %></h1>
+    <form action="/login" method="POST">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" id="email" class="form-control form-control-lg" required>
         </div>
+        <div class="mb-4">
+            <label for="password" class="form-label">Senha</label>
+            <input type="password" name="password" id="password" class="form-control form-control-lg" required>
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">Entrar</button>
+        </div>
+    </form>
+    <div class="text-center mt-3">
+        <p>Não tem uma conta? <a href="/register">Cadastre-se</a></p>
     </div>
 </div>
 <%- include('partials/footer'); %>

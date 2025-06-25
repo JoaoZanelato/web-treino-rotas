@@ -1,5 +1,19 @@
-<%- include('partials/header'); %>
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
-<%- include('partials/footer'); %>
+<%- include('header'); %>
+
+<div class="container text-center mt-5">
+    <div class="card p-5">
+        <h1 class="display-1 text-danger"><%= error.status || 500 %></h1>
+        <h2 class="mb-4"><%= message %></h2>
+        <p class="text-muted">Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.</p>
+        
+        <% if (process.env.NODE_ENV !== 'production') { %>
+            <pre class="bg-light text-start p-3 mt-4" style="white-space: pre-wrap; word-wrap: break-word;"><%= error.stack %></pre>
+        <% } %>
+
+        <div class="mt-4">
+            <a href="/" class="btn btn-primary">Voltar para a Página Inicial</a>
+        </div>
+    </div>
+</div>
+
+<%- include('footer'); %>

@@ -8,25 +8,26 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const db = require('./models');
 
-// Rotas
+// Importação das rotas
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const notesRouter = require('./routes/notes');
 
 const app = express();
 
-// Sincroniza o banco de dados
+// Sincroniza o banco de dados (cria as tabelas se não existirem)
 db.sequelize.sync();
 
 // Configuração da View Engine (EJS)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// Middlewares padrão
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'))); // Essencial para o CSS funcionar
 
 // Configuração da Sessão
 app.use(session({
@@ -39,11 +40,11 @@ app.use(session({
 }));
 
 // Configuração do Passport (autenticação)
-require('./config/passport-config'); // Importa a configuração
+require('./config/passport-config'); // Importa a lógica de configuração do Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Middleware para passar dados do usuário para todas as views
+// Middleware para passar dados do usuário para todas as views (ex: nome do usuário no header)
 app.use((req, res, next) => {
     res.locals.isAuthenticated = req.isAuthenticated();
     res.locals.user = req.user;
@@ -55,17 +56,23 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/notes', notesRouter);
 
-// Captura erro 404 e encaminha para o handler de erro
+// Captura erro 404 (página não encontrada) e encaminha para o handler de erro
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// Handler de Erro
+// Handler de Erro (Onde a correção foi aplicada)
 app.use(function(err, req, res, next) {
+  // Define variáveis locais para a view de erro
   res.locals.message = err.message;
+  // Em desenvolvimento, mostra o erro completo. Em produção, não.
   res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // Define o status da resposta (ex: 404, 500)
   res.status(err.status || 500);
-  res.render('error');
+
+  // Renderiza a página de erro, procurando o arquivo na pasta 'partials'
+  res.render('partials/error'); // <<--- CORREÇÃO APLICADA AQUI
 });
 
 module.exports = app;
