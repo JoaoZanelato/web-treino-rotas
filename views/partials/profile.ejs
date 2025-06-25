@@ -1,0 +1,37 @@
+<%- include('partials/header'); %>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Editar Perfil</h2>
+                <form action="/users/profile" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Email (não pode ser alterado)</label>
+                        <input type="email" class="form-control" value="<%= user.email %>" disabled>
+                    </div>
+                     <div class="mb-3">
+                        <label for="name" class="form-label">Nome</label>
+                        <input type="text" name="name" id="name" class="form-control" value="<%= user.name %>" required>
+                    </div>
+                     <div class="mb-3">
+                        <label for="pronoun" class="form-label">Pronome de Tratamento (Ex: Sr., Dra., etc.)</label>
+                        <input type="text" name="pronoun" id="pronoun" class="form-control" value="<%= user.pronoun || '' %>">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </form>
+            </div>
+        </div>
+    </div>
+     <div class="col-md-6">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h2 class="card-title">Zona de Perigo</h2>
+                <p>A exclusão do perfil é permanente e apagará todas as suas anotações. Esta ação não pode ser desfeita.</p>
+                <form action="/users/profile/delete" method="POST" onsubmit="return confirm('Você tem certeza ABSOLUTA que quer apagar seu perfil e todas as suas notas?');">
+                    <button type="submit" class="btn btn-light w-100">Eu entendo, quero excluir meu perfil</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('partials/footer'); %>

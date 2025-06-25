@@ -1,0 +1,25 @@
+<%- include('partials/header'); %>
+<h1><%= title %></h1>
+<p>Anotações aqui serão excluídas permanentemente após 30 dias (funcionalidade a ser implementada).</p>
+
+<% if (notes.length > 0) { %>
+    <% notes.forEach(note => { %>
+        <div class="card mb-2">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <span><%= note.title %></span>
+                <div>
+                    <form action="/users/trash/<%= note.id %>/restore" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-success">Restaurar</button>
+                    </form>
+                    <form action="/users/trash/<%= note.id %>/delete" method="POST" class="d-inline" onsubmit="return confirm('Excluir permanentemente?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Excluir para Sempre</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <% }); %>
+<% } else { %>
+    <p>Sua lixeira está vazia.</p>
+<% } %>
+
+<%- include('partials/footer'); %>

@@ -1,0 +1,19 @@
+<%- include('partials/header'); %>
+<h1><%= title %></h1>
+<div class="card">
+    <div class="card-body">
+        <form action="<%= note ? '/notes/' + note.id + '/edit' : '/notes/create' %>" method="POST">
+            <div class="mb-3">
+                <label for="title" class="form-label">Título</label>
+                <input type="text" name="title" id="title" class="form-control" value="<%= note ? note.title : '' %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Conteúdo (suporta Markdown)</label>
+                <textarea name="content" id="content" rows="10" class="form-control" required><%= note ? note.content : '' %></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="/dashboard" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+<%- include('partials/footer'); %>

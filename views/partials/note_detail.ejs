@@ -1,0 +1,16 @@
+<%- include('partials/header'); %>
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2><%= note.title %></h2>
+        <div>
+            <a href="/notes/<%= note.id %>/edit" class="btn btn-primary">Editar</a>
+             <form action="/notes/<%= note.id %>/delete" method="POST" class="d-inline">
+                <button type="submit" class="btn btn-danger">Mover para Lixeira</button>
+            </form>
+        </div>
+    </div>
+    <div class="card-body">
+        <%- renderedContent %>
+    </div>
+</div>
+<%- include('partials/footer'); %>

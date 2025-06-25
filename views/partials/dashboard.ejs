@@ -1,0 +1,46 @@
+<%- include('partials/header'); %>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Olá, <%= user.pronoun || '' %> <%= user.name %>!</h1>
+    <a href="/notes/create" class="btn btn-success">Nova Anotação</a>
+</div>
+
+<input type="text" id="searchInput" placeholder="Buscar em suas anotações..." class="form-control mb-3">
+
+<% if (notes.length > 0) { %>
+<form action="/notes/batch-delete" method="POST">
+    <button type="submit" class="btn btn-danger mb-3">Excluir Selecionadas</button>
+    <div id="notes-list">
+        <% notes.forEach(note => { %>
+            <div class="card note-item mb-2">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">
+                            <input type="checkbox" name="noteIds" value="<%= note.id %>" class="form-check-input me-2">
+                            <a href="/notes/<%= note.id %>"><%= note.title %></a>
+                        </h5>
+                        <div>
+                            <a href="/notes/<%= note.id %>/edit" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a href="/notes/<%= note.id %>/download" class="btn btn-sm btn-outline-secondary">Baixar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+</form>
+<% } else { %>
+    <p>Você ainda não tem nenhuma anotação. Que tal <a href="/notes/create">criar a primeira</a>?</p>
+<% } %>
+
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let items = document.querySelectorAll('.note-item');
+        items.forEach(function(item) {
+            let text = item.textContent.toLowerCase();
+            item.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+</script>
+
+<%- include('partials/footer'); %>
